@@ -4,7 +4,16 @@
  * Binds a CodeMirror widget to a <textarea> element.
  */
 angular.module('ui.codemirror', [])
-  .constant('uiCodemirrorConfig', {})
+  .constant('uiCodemirrorConfig', {
+    autoCloseBrackets: true,
+    autoRefresh: true,
+    continueComments: true,
+    lineNumbers: true,
+    lineWrapping : true,
+    matchBrackets: true,
+    scrollbarStyle: "overlay",
+    styleActiveLine: true
+  })
   .directive('uiCodemirror', uiCodemirrorDirective);
 
 /**
@@ -30,7 +39,7 @@ function uiCodemirrorDirective($timeout, uiCodemirrorConfig) {
 
     var codemirrorOptions = angular.extend(
       { value: iElement.text() },
-      uiCodemirrorConfig.codemirror || {},
+      uiCodemirrorConfig || {},
       scope.$eval(iAttrs.uiCodemirror),
       scope.$eval(iAttrs.uiCodemirrorOpts)
     );
@@ -91,6 +100,25 @@ function uiCodemirrorDirective($timeout, uiCodemirrorConfig) {
 
           if (oldValue && newValues[key] === oldValue[key]) {
             return;
+          }
+
+          if (newValues[key] === "mode" && newValues["mode"].indexOf("sql") > -1) {
+            console.log("sql")
+
+            codemirrot.on("inputRead", function autoHint(instance) {
+              if (instance.state.completionActive) {
+                return;
+              }
+              var cur = instance.getCursor();
+              var token = instance.getTokenAt(cur);
+              var string = '';
+              if (token.string.match(/^[.`\w@]\w*$/)) {
+                string = token.string;
+              }
+              if (string.length > 0) {
+                codemirrot.showHint(instance);
+              }
+            })
           }
 
           codemirrot.setOption(key, newValues[key]);
