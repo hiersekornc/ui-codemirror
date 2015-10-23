@@ -102,25 +102,6 @@ function uiCodemirrorDirective($timeout, uiCodemirrorConfig) {
             return;
           }
 
-          if (newValues[key] === "mode" && newValues["mode"].indexOf("sql") > -1) {
-            console.log("sql")
-
-            codemirrot.on("inputRead", function autoHint(instance) {
-              if (instance.state.completionActive) {
-                return;
-              }
-              var cur = instance.getCursor();
-              var token = instance.getTokenAt(cur);
-              var string = '';
-              if (token.string.match(/^[.`\w@]\w*$/)) {
-                string = token.string;
-              }
-              if (string.length > 0) {
-                codemirrot.showHint(instance);
-              }
-            })
-          }
-
           codemirrot.setOption(key, newValues[key]);
         }
       });
