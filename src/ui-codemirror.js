@@ -1,12 +1,6 @@
-'use strict';
-
-/**
- * Binds a CodeMirror widget to a <textarea> element.
- */
 angular.module('ui.codemirror', [])
   .constant('uiCodemirrorConfig', {
     autoCloseBrackets: true,
-    autoRefresh: true,
     continueComments: true,
     lineNumbers: true,
     lineWrapping: true,
